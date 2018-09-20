@@ -10,7 +10,7 @@ i = 0;
 
 
 global.data = "Hi";
-global.m = "Hi";
+global.value = "Hi";
 // fs.writeFile('type.txt',data);
 const PORT = process.env.PORT || 8080;
 app.listen(process.env.PORT, () => {
@@ -169,65 +169,13 @@ app.get('/api', (req, res) => {
 
 
 app.get('/timestamp', (req, res) => {
-    https.get('https://lifesoul.herokuapp.com/api', (res) => {
-    
-  
-        const { statusCode } = res;
-        const contentType = res.headers['content-type'];
-       
-        let error;
-        if (statusCode !== 200) {
-          error = new Error('Request Failed.\n' +
-                            `Status Code: ${statusCode}`);
-        } else if (!/^application\/json/.test(contentType)) {
-          error = new Error('Invalid content-type.\n' +
-                            `Expected application/json but received ${contentType}`);
-        }
-        if (error) {
-          console.error(error.message);
-      
-          res.resume();
-          return;
-        }
-      
-        //res.setEncoding('utf8');
-        let rawData = '';
-        res.on('data', (chunk) => { rawData += chunk; });
-        res.on('end', () => {
-          try {
-            const parsedData = JSON.parse(rawData);
-            data = parsedData;
-            console.log(parsedData);
-    
-            
-          for(var i = 0; i < parsedData.matches.length;i++){
-              map.push(parsedData.matches[i]["unique_id"]);
-                i++;
-        }
-      
-          m =  map.reduce((min, p) => p < min ? p : min, map[0]);
-       
-          res.send(m);
-          // console.log(map);
-          // map.forEach( (value) => {
-          // })   
-      
-      
-      
-          } catch (e) {
-            console.error(e.message);
-          }
-      
-      
-       
-      
-        });
+   
+      res.send(value);
+
       }).on('error', (e) => {
       
         console.error(`Got error: ${e.message}`);
-      });
-    
- 
+      
 })
 
 app.get('/timestamp-cached', (req, res) => {
