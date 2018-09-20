@@ -42,7 +42,7 @@ app.listen(process.env.PORT, () => {
     res.on('end', () => {
       try {
         const parsedData = JSON.parse(rawData);
-        data = parsedData;
+        //data = parsedData;
         console.log(parsedData);
 
         for(var i = 0; i < data.matches.length;i++){
@@ -50,7 +50,7 @@ app.listen(process.env.PORT, () => {
               i++;
       }
     
-       value =  map.reduce((min, p) => p < min ? p : min, map[0]);
+       data =  map.reduce((min, p) => p < min ? p : min, map[0]);
        //value = m;
         console.log(m);
       // console.log(map);
@@ -86,7 +86,7 @@ app.listen(process.env.PORT, () => {
 
 app.get('/api', (req, res) => {
 
-    res.send(value);
+    res.send(data);
 
  // app.listen(8080, () => {
   
