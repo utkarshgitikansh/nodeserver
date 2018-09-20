@@ -45,15 +45,7 @@ app.listen(process.env.PORT, () => {
         data = parsedData;
         console.log(parsedData);
 
-        
-      for(var i = 0; i < parsedData.matches.length;i++){
-          map.push(parsedData.matches[i]["unique_id"]);
-            i++;
-    }
-  
-      m =  map.reduce((min, p) => p < min ? p : min, map[0]);
    
-      value = m;
       // console.log(map);
       // map.forEach( (value) => {
       // })   
@@ -170,7 +162,15 @@ app.get('/api', (req, res) => {
 
 app.get('/timestamp', (req, res) => {
    
-      res.send(value);
+           
+    for(var i = 0; i < data.matches.length;i++){
+        map.push(parsedData.matches[i]["unique_id"]);
+          i++;
+  }
+
+    m =  map.reduce((min, p) => p < min ? p : min, map[0]);
+ 
+   res.send(m);
 
       }).on('error', (e) => {
       
