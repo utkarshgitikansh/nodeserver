@@ -168,7 +168,7 @@ app.get('/timestamp', (req, res) => {
           i++;
   }
 
-    m =  map.reduce((min, p) => p < min ? p : min, map[0]);
+   let m =  map.reduce((min, p) => p < min ? p : min, map[0]);
     console.log(m);
  
    res.send(m);
