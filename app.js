@@ -87,7 +87,7 @@ app.listen(process.env.PORT, () => {
 
 app.get('/api', (req, res) => {
 
-    res.send(m);
+    res.send(map);
 
  // app.listen(8080, () => {
   
