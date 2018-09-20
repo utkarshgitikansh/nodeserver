@@ -75,7 +75,7 @@ app.listen(PORT1, () => {
 
 app.get('/', (req, res) => {
           
-  res.send("data");
+  res.send(data);
 
   }).on('error', (e) => {
       
