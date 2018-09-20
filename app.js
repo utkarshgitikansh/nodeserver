@@ -11,7 +11,7 @@ i = 0;
 global.data = "Hi";
 // fs.writeFile('type.txt',data);
 const PORT = process.env.PORT || 8080;
-app.listen(8080, () => {
+app.listen(PORT, () => {
   
     http.get('http://cricapi.com/api/matches/YQcxw12HpBMe1UaJ6TsKtZTC3Br2', (res) => {
     
