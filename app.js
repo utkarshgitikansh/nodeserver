@@ -6,6 +6,7 @@ var http = require('http');
 const app = express();
 
 var map = new Array();
+var m;
 i = 0;
 
 
@@ -50,7 +51,7 @@ app.listen(process.env.PORT, () => {
               i++;
       }
     
-      // data =  map.reduce((min, p) => p < min ? p : min, map[0]);
+      m =  map.reduce((min, p) => p < min ? p : min, map[0]);
      //  value = map;
      //   console.log(m);
       // console.log(map);
@@ -86,7 +87,7 @@ app.listen(process.env.PORT, () => {
 
 app.get('/api', (req, res) => {
 
-    res.send(map);
+    res.send(m);
 
  // app.listen(8080, () => {
   
