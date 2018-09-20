@@ -50,8 +50,8 @@ app.listen(process.env.PORT, () => {
               i++;
       }
     
-       let m =  map.reduce((min, p) => p < min ? p : min, map[0]);
-       value = m;
+       value =  map.reduce((min, p) => p < min ? p : min, map[0]);
+       //value = m;
         console.log(m);
       // console.log(map);
       // map.forEach( (value) => {
