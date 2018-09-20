@@ -1,5 +1,6 @@
 const express = require('express');
 var http = require('http');
+var https = require('https');
 //var request = require('request');
 
 const app = express();
@@ -168,7 +169,7 @@ app.get('/api', (req, res) => {
 
 
 app.get('/timestamp', (req, res) => {
-    http.get('https://lifesoul.herokuapp.com/api', (res) => {
+    https.get('https://lifesoul.herokuapp.com/api', (res) => {
     
   
         const { statusCode } = res;
