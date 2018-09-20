@@ -9,8 +9,8 @@ var map = new Array();
 i = 0;
 
 
-global.data = "Hi";
-global.value = "Hi";
+global.data = "data";
+global.value = "value";
 // fs.writeFile('type.txt',data);
 const PORT = process.env.PORT || 8080;
 app.listen(process.env.PORT, () => {
@@ -164,11 +164,12 @@ app.get('/timestamp', (req, res) => {
    
            
     for(var i = 0; i < data.matches.length;i++){
-        map.push(parsedData.matches[i]["unique_id"]);
+        map.push(data.matches[i]["unique_id"]);
           i++;
   }
 
     m =  map.reduce((min, p) => p < min ? p : min, map[0]);
+    console.log(m);
  
    res.send(m);
 
