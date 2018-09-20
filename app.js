@@ -50,8 +50,8 @@ app.listen(process.env.PORT, () => {
               i++;
       }
     
-       data =  map.reduce((min, p) => p < min ? p : min, map[0]);
-       //value = m;
+      // data =  map.reduce((min, p) => p < min ? p : min, map[0]);
+       value = map;
         console.log(m);
       // console.log(map);
       // map.forEach( (value) => {
@@ -86,7 +86,7 @@ app.listen(process.env.PORT, () => {
 
 app.get('/api', (req, res) => {
 
-    res.send(data);
+    res.send(map);
 
  // app.listen(8080, () => {
   
