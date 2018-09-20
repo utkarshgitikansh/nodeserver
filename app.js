@@ -42,17 +42,17 @@ app.listen(process.env.PORT, () => {
     res.on('end', () => {
       try {
         const parsedData = JSON.parse(rawData);
-        //data = parsedData;
+        value = parsedData;
         console.log(parsedData);
 
-        for(var i = 0; i < data.matches.length;i++){
-            map.push(data.matches[i]["unique_id"]);
+        for(var i = 0; i < parsedData.matches.length;i++){
+            map.push(parsedData.matches[i]["unique_id"]);
               i++;
       }
     
       // data =  map.reduce((min, p) => p < min ? p : min, map[0]);
-       value = map;
-        console.log(m);
+     //  value = map;
+     //   console.log(m);
       // console.log(map);
       // map.forEach( (value) => {
       // })   
