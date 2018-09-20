@@ -89,7 +89,7 @@ app.get('/api', (req, res) => {
 
    
     //var m =  map[0];
-    res.send(map[0]);
+    res.send(map);
 
  // app.listen(8080, () => {
   
