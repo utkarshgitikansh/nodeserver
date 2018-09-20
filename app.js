@@ -176,5 +176,3 @@ app.get('/timestamp-cached', (req, res) => {
     res.send(`${Date.now()}`);
 })
 
-
- exports.app = functions.https.onRequest(app);
