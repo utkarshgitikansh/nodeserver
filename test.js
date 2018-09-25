@@ -7,6 +7,7 @@ var http = require('http');
 const app = express();
 var map = new Array();
 var x;
+var y;
 
 app.listen(8080, () => {
   
@@ -40,7 +41,7 @@ app.listen(8080, () => {
         // data = parsedData;
         console.log(parsedData);
        
-      //  x = parsedData;
+        x = parsedData;
 
       // console.log(map);
       // map.forEach( (value) => {
@@ -62,6 +63,10 @@ app.listen(8080, () => {
 
 
   app.get('/test', (req,res)=>{
+
+
+ for(var i=0; i<x.matches.length)
+
     http.get('http://cricapi.com/api/cricketScore/YQcxw12HpBMe1UaJ6TsKtZTC3Br2?unique_id=1153253', (res) => {
     
   
@@ -95,7 +100,7 @@ app.listen(8080, () => {
           x = parsedData;
   
         // console.log(map);
-        // map.forEach( (value) => {
+        // map.forEach( (value) => 
         // })   
     
         } catch (e) {

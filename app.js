@@ -18,7 +18,7 @@ global.stats = "new";
 const PORT = process.env.PORT || 8080;
 // app.listen(process.env.PORT, () => {
 
-  app.listen(8080, () => {
+  app.listen(PORT, () => {
   
   
     http.get('http://cricapi.com/api/matches/YQcxw12HpBMe1UaJ6TsKtZTC3Br2', (res) => {
