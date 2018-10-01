@@ -1,9 +1,19 @@
 const express = require('express');
 var https = require('https');
 var http = require('http');
-//var request = require('request');
+var bodyParser = require('body-parser');
+var multer = require('multer'); 
+var querystring = require('querystring'); 
+var upload = multer(); 
+
+
+
 
 const app = express();
+
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ extended: true })); 
+
 
 var map = new Array();
 var m;
@@ -14,9 +24,11 @@ global.data = "data";
 global.value = "value";
 global.current = "current";
 global.stats = "new";
-// fs.writeFile('type.txt',data);
+global.playerPID = "x";
+global.playerData = "dhoni";
+
 const PORT = process.env.PORT || 8080;
-// app.listen(process.env.PORT, () => {
+
 
   app.listen(PORT, () => {
   
@@ -42,7 +54,7 @@ const PORT = process.env.PORT || 8080;
       return;
     }
   
-    //res.setEncoding('utf8');
+
     let rawData = '';
     res.on('data', (chunk) => { rawData += chunk; });
     res.on('end', () => {
@@ -51,19 +63,6 @@ const PORT = process.env.PORT || 8080;
         value = parsedData;
         console.log(parsedData);
         m = parsedData.matches.length;
-      //   for(var i = 0; i < parsedData.matches.length;i++){
-      //       map.push(parsedData.matches[i]["unique_id"]);
-      //         i++;
-      // }
-    
-    //   m =  map.reduce((min, p) => p < min ? p : min, map[0]);
-     //  value = map;
-     //   console.log(m);
-      // console.log(map);
-      // map.forEach( (value) => {
-      // })   
-  
-  
   
       } catch (e) {
         console.error(e.message);
@@ -79,30 +78,19 @@ const PORT = process.env.PORT || 8080;
   });
 
 });
-
-// app.get('/api', (req, res) => {
-          
-//   res.send(data);
-
-//   }).on('error', (e) => {
-      
-//     console.error(`Got error: ${e.message}`);
-//   });
  
 
 app.get('/cricket', (req, res) => {
 
 
-   var matches = {} // empty Object
+   var matches = {} 
    var match_score = {} 
    
-    //var m =  map[0];
-    // res.send(map);
 
     
     var key1 = 'current_matches';
     var key3 = 'score';
-    matches[key1] = []; // empty Array, which you can push() values into
+    matches[key1] = []; 
     match_score[key3] = []; 
     
     for (var i = 0; i<m; i++){
@@ -120,17 +108,11 @@ app.get('/cricket', (req, res) => {
         date: value.matches[i]["dateTimeGMT"],
 
         
-        // score: [
-        //     stat= current.stat
-        //     // score=score_detail["score"],
-        //     // description=score_detail["description"]
-        // ]
-        
     }; 
 
     if(value.matches[i]["winner_team"] == null || value.matches[i]["matchStarted"] == true) {
     matches[key1].push(data);
-    matches[key1].push(data);
+   
     }
   }
   }
@@ -162,117 +144,22 @@ app.get('/cricket', (req, res) => {
    }
  }
  }
-    // var data2 = {
-    //     sampleTime: '1450632410296',
-    //     data: '78.15431:0.5247617:-0.20050584'
-    // };
 
-    // for (var i = 0; i<10; i++){
-    
-     
-    //   // matches[key].push(value.matches[i]["team-1"]);
-    //   // matches[key].push(value.matches[i]["team-2"]);
-    //   i++;
-
-    // }
     
     
     
-    
-    res.send(JSON.stringify(matches));
-  //  res.send(current);
-    
-
- // app.listen(8080, () => {
-  
-    // http.get('http://cricapi.com/api/matches/YQcxw12HpBMe1UaJ6TsKtZTC3Br2', (res) => {
-    
-  
-    // const { statusCode } = res;
-    // const contentType = res.headers['content-type'];
-   
-    // let error;
-    // if (statusCode !== 200) {
-    //   error = new Error('Request Failed.\n' +
-    //                     `Status Code: ${statusCode}`);
-    // } else if (!/^application\/json/.test(contentType)) {
-    //   error = new Error('Invalid content-type.\n' +
-    //                     `Expected application/json but received ${contentType}`);
-    // }
-    // if (error) {
-    //   console.error(error.message);
-  
-    //   res.resume();
-    //   return;
-    // }
-  
-    // //res.setEncoding('utf8');
-    // let rawData = '';
-    // res.on('data', (chunk) => { rawData += chunk; });
-    // res.on('end', () => {
-    //   try {
-    //     const parsedData = JSON.parse(rawData);
-    //     // data = parsedData;
-    //     // console.log(parsedData);
-    //     res1.send(parsedData);
-        
-    //   for(var i = 0; i < parsedData.matches.length;i++){
-    //       map.push(parsedData.matches[i]["unique_id"]);
-    //         i++;
-    // }
-  
-    //   m =  map.reduce((min, p) => p < min ? p : min, map[0]);
-   
-    //   value = m;
-    //   // console.log(map);
-    //   // map.forEach( (value) => {
-    //   // })   
+    res.send(matches);
   
   
-  
-    //   } catch (e) {
-    //     console.error(e.message);
-    //   }
-  
-  
-   
-  
-  //  });
   }).on('error', (e) => {
   
     console.error(`Got error: ${e.message}`);
   });
 
-//});
-
-//   var getAccessToken = 'http://cricapi.com/api/matches/YQcxw12HpBMe1UaJ6TsKtZTC3Br2';
-  
-     
-//    request(getAccessToken, function (error, response, body) {
-//      console.log(body);
-//        res.json(JSON.parse(body));
-  
-
-//  }).on('error', (e) => {
-     
-//    console.error(`Got error: ${e.message}`);
-//  });
-
-
-//})
-
 
 app.get('/timestamp', (req, res) => {
    
-           
-//     for(var i = 0; i < data.matches.length;i++){
-//         map.push(data.matches[i]["unique_id"]);
-//           i++;
-//   }
-
-//    let m =  map.reduce((min, p) => p < min ? p : min, map[0]);
-//     console.log(m);
- 
+            
    res.send(value);
 
       }).on('error', (e) => {
@@ -281,7 +168,176 @@ app.get('/timestamp', (req, res) => {
       
 })
 
-app.get('/timestamp-cached', (req, res) => {
-    res.set('Cache-Control','public,max-age=300,s-maxage=600');
-    res.send(`${Date.now()}`);
+app.get('/timestamp-cached', (req1, res) => {
+    // res.set('Cache-Control','public,max-age=300,s-maxage=600');
+    // res.send(`${Date.now()}`);
+   
+})
+
+app.get('/score', (req, res) => {
+
+  id = req.query.unique_id; 
+
+  http.get(`http://cricapi.com/api/cricketScore/YQcxw12HpBMe1UaJ6TsKtZTC3Br2?unique_id=${id}`, (res) => {
+    
+  
+    const { statusCode } = res;
+    const contentType = res.headers['content-type'];
+   
+    let error;
+    if (statusCode !== 200) {
+      error = new Error('Request Failed.\n' +
+                        `Status Code: ${statusCode}`);
+    } else if (!/^application\/json/.test(contentType)) {
+      error = new Error('Invalid content-type.\n' +
+                        `Expected application/json but received ${contentType}`);
+    }
+    if (error) {
+      console.error(error.message);
+  
+      res.resume();
+      return;
+    }
+  
+    
+    let rawData = '';
+    res.on('data', (chunk) => { rawData += chunk; });
+    res.on('end', () => {
+      try {
+        const parsedData = JSON.parse(rawData);
+        stats = parsedData;
+       
+    
+      } catch (e) {
+        console.error(e.message);
+      }
+  
+  
+   
+  
+    });
+  }).on('error', (e) => {
+  
+    console.error(`Got error: ${e.message}`);
+  });
+
+  res.send(stats["score"]);
+
+})
+
+
+app.get('/playerBio', (req, res) => {
+
+  name = req.query.name; 
+
+  http.get(`http://cricapi.com/api/playerFinder/YQcxw12HpBMe1UaJ6TsKtZTC3Br2?name=${name}`, (res) => {
+    
+  
+    const { statusCode } = res;
+    const contentType = res.headers['content-type'];
+   
+    let error;
+    if (statusCode !== 200) {
+      error = new Error('Request Failed.\n' +
+                        `Status Code: ${statusCode}`);
+    } else if (!/^application\/json/.test(contentType)) {
+      error = new Error('Invalid content-type.\n' +
+                        `Expected application/json but received ${contentType}`);
+    }
+    if (error) {
+      console.error(error.message);
+  
+      res.resume();
+      return;
+    }
+  
+    
+    let rawData = '';
+    res.on('data', (chunk) => { rawData += chunk; });
+    res.on('end', () => {
+      try {
+        const parsedData = JSON.parse(rawData);
+        playerPID = parsedData.data[0]["pid"];
+      
+        ///////////////////////////////////
+
+        http.get(`http://cricapi.com/api/playerStats/YQcxw12HpBMe1UaJ6TsKtZTC3Br2?pid=${playerPID}`, (res1) => {
+    
+  
+          const { statusCode } = res1;
+          const contentType = res1.headers['content-type'];
+         
+          let error;
+          if (statusCode !== 200) {
+            error = new Error('Request Failed.\n' +
+                              `Status Code: ${statusCode}`);
+          } else if (!/^application\/json/.test(contentType)) {
+            error = new Error('Invalid content-type.\n' +
+                              `Expected application/json but received ${contentType}`);
+          }
+          if (error) {
+            console.error(error.message);
+        
+            res1.resume();
+            return;
+          }
+        
+          
+          let raw1Data = '';
+          res1.on('data', (chunk) => { raw1Data += chunk; });
+          res1.on('end', () => {
+            try {
+              const parsed1Data = JSON.parse(raw1Data);
+              playerData = parsed1Data;
+            
+            ///console.log(playerName);
+          //////////////////////////////////////
+
+
+       
+          ///////////////////////////////////////
+            } catch (e) {
+              console.error(e.message);
+            }
+        
+        
+         
+        
+          });
+        }).on('error', (e) => {
+        
+          console.error(`Got error: ${e.message}`);
+        });
+
+
+
+        //////////////////////////////////
+      } catch (e) {
+        console.error(e.message);
+      }
+  
+  
+   
+  
+    });
+  }).on('error', (e) => {
+  
+    console.error(`Got error: ${e.message}`);
+  });
+
+  // res.send(`PID is `+ playerPID);
+   res.send(playerData);
+
+})
+
+
+app.get('/test', (req, res) => {
+   
+            
+ 
+
+     }).on('error', (e) => {
+     
+       console.error(`Got error: ${e.message}`);
+     
 })
