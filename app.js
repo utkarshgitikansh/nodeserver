@@ -26,6 +26,7 @@ global.current = "current";
 global.stats = "new";
 global.playerPID = "x";
 global.playerData = "dhoni";
+global.weather = "clear";
 
 const PORT = process.env.PORT || 8080;
 
@@ -330,10 +331,67 @@ app.get('/playerBio', (req, res) => {
 
 })
 
+app.get('/weather', (req, res) => {
+   
+  city = req.query.city;
+  state = req.query.state;     
+ 
+
+  http.get(`http://api.wunderground.com/api/99dfe35fcb7de1ee/conditions/q/${state}/${city}.json`, (res) => {
+
+    const { statusCode } = res;
+    const contentType = res.headers['content-type'];
+   
+    let error;
+    if (statusCode !== 200) {
+      error = new Error('Request Failed.\n' +
+                        `Status Code: ${statusCode}`);
+    } else if (!/^application\/json/.test(contentType)) {
+      error = new Error('Invalid content-type.\n' +
+                        `Expected application/json but received ${contentType}`);
+    }
+    if (error) {
+      console.error(error.message);
+  
+      res.resume();
+      return;
+    }
+  
+    
+    let rawData = '';
+    res.on('data', (chunk) => { rawData += chunk; });
+    res.on('end', () => {
+      try {
+        const parsedData = JSON.parse(rawData);
+        weather = parsedData;
+       
+    
+      } catch (e) {
+        console.error(e.message);
+      }
+  
+  
+   
+  
+    });
+  }).on('error', (e) => {
+  
+    console.error(`Got error: ${e.message}`);
+  });
+
+  res.send(weather);
+
+}).on('error', (e) => {
+
+  console.error(`Got error: ${e.message}`);
+
+})
+
+
 
 app.get('/test', (req, res) => {
    
-            
+
  
 
      }).on('error', (e) => {
