@@ -170,8 +170,7 @@ app.get('/timestamp', (req, res) => {
 })
 
 app.get('/timestamp-cached', (req1, res) => {
-    // res.set('Cache-Control','public,max-age=300,s-maxage=600');
-    // res.send(`${Date.now()}`);
+   res.send("Future of something cool!!");
    
 })
 
@@ -326,8 +325,149 @@ app.get('/playerBio', (req, res) => {
     console.error(`Got error: ${e.message}`);
   });
 
+////////////
+   var record = {} 
+   var match_score = {} 
+   
+
+    
+    var key1 = 'info';
+    var key2 = 'ODIs';
+    var key3 = 'tests';
+    var key4 = 'T20Is';
+    //var key3 = 'score';
+    record[key1] = []; 
+    record[key2] = []; 
+    record[key3] = []; 
+    record[key4] = []; 
+    //match_score[key3] = []; 
+    
+    var role = new String();
+    role = playerData.playingRole;
+    console.log(role);
+
+    if (role == null){
+        role = "cricketer"
+    }
+    if( role.includes("batsman")|| role == "cricketer") {
+          
+      var data = {
+
+        full_name: playerData.fullName,
+        name: playerData.name,
+        player_role: playerData.playingRole,
+        teams: playerData.majorTeams,
+        battingStyle: playerData.battingStyle        
+    
+      }
+      record[key1].push(data);
+
+      var data = {
+
+        runs: playerData.data.batting.ODIs.Runs,
+        matches: playerData.data.batting.ODIs.Mat,
+        innings: playerData.data.batting.ODIs.Inns,
+        hundreds: playerData.data.batting.ODIs["100"],
+        fifties: playerData.data.batting.ODIs["50"],        
+        highest: playerData.data.batting.ODIs.HS        
+      }
+
+      record[key2].push(data);
+
+      var data = {
+
+        runs: playerData.data.batting.tests.Runs,
+        matches: playerData.data.batting.tests.Mat,
+        innings: playerData.data.batting.tests.Inns,
+        hundreds: playerData.data.batting.tests["100"],
+        fifties: playerData.data.batting.tests["50"],
+        highest: playerData.data.batting.ODIs.HS         
+
+      }
+
+      record[key3].push(data);
+
+      var data = {
+
+        runs: playerData.data.batting.T20Is.Runs,
+        matches: playerData.data.batting.T20Is.Mat,
+        innings: playerData.data.batting.T20Is.Inns,
+        hundreds: playerData.data.batting.T20Is["100"],
+        fifties: playerData.data.batting.T20Is["50"],
+        highest: playerData.data.batting.T20Is.HS         
+
+      }
+      
+      record[key4].push(data);
+      ///////////////////////
+    }
+
+    else {
+
+
+      var data = {
+
+        full_name: playerData.fullName,
+        name: playerData.name,
+        player_role: playerData.playingRole,
+        teams: playerData.majorTeams,
+        bowlingStyle: playerData.bowlingStyle        
+    
+      }
+      record[key1].push(data);
+
+      var data = {
+
+        
+        matches: playerData.data.bowling.ODIs.Mat,
+        innings: playerData.data.bowling.ODIs.Inns,
+        wickets: playerData.data.bowling.ODIs.Wkts,
+        average: playerData.data.bowling.ODIs.Ave,
+        "4WI": playerData.data.bowling.ODIs["4w"],        
+        best_figures: playerData.data.bowling.ODIs.BBI        
+      }
+
+      record[key2].push(data);
+
+      var data = {
+
+        matches: playerData.data.bowling.tests.Mat,
+        innings: playerData.data.bowling.tests.Inns,
+        wickets: playerData.data.bowling.tests.Wkts,
+        average: playerData.data.bowling.tests.Ave,
+        "4WI": playerData.data.bowling.tests["4w"],        
+        best_figures: playerData.data.bowling.tests.BBI        
+
+      }
+
+      record[key3].push(data);
+      if(playerData.hasOwnProperty(`data.bowling.T20Is`)){
+      var data = {
+
+       
+
+        matches: playerData.data.bowling.T20Is.Mat,
+        innings: playerData.data.bowling.T20Is.Inns,
+        wickets: playerData.data.bowling.T20Is.Wkts,
+        average: playerData.data.bowling.T20Is.Ave,
+        "4WI": playerData.data.bowling.T20Is["4w"],        
+        best_figures: playerData.data.bowling.T20Is.BBI        
+      
+    }
+  }
+
+      
+      //record[key4].push(data);
+
+    }
+    
+    //record[key2].push(ODI);
+    // record[key3].push(Tests);
+    // record[key4].push(T20s);
+     res.send(record);
+////////////
   // res.send(`PID is `+ playerPID);
-   res.send(playerData);
+  // res.send(playerData);
 
 })
 
@@ -378,8 +518,33 @@ app.get('/weather', (req, res) => {
   
     console.error(`Got error: ${e.message}`);
   });
+  
+  ////////////////////////
 
-  res.send(weather);
+   var weather_data = {} 
+    
+    var key1 = 'temperature';
+
+    weather_data[key1] = []; 
+              
+      var data = {
+
+        full_name: weather.current_observation.display_location["full"],
+        observation_time: weather.current_observation.observation_time,
+        weather: weather.current_observation.weather,
+        temp_celsius: weather.current_observation.temp_c,
+        relative_humidity: weather.current_observation.relative_humidity,        
+        wind_string:weather.current_observation.wind_string,
+        feels_like_celsius:weather.current_observation.feelslike_c,
+        visibility_km:weather.current_observation.visibility_km,
+        icon_url:weather.current_observation.icon_url,
+        precip_today_in:weather.current_observation.precip_today_in
+      }
+      weather_data[key1].push(data);
+
+  ///////////////////////
+
+  res.send(weather_data);
 
 }).on('error', (e) => {
 
