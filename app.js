@@ -1,4 +1,5 @@
 const express = require('express');
+// var cors = require('cors');
 var https = require('https');
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -19,6 +20,23 @@ var map = new Array();
 var m;
 i = 0;
 
+// var originsWhitelist = [
+//   'http://localhost:4200' ];
+
+//   var corsOptions = {
+//     origin: function(origin, callback){
+//           var isWhitelisted = originsWhitelist.indexOf(origin) !== -1;
+//           callback(null, isWhitelisted);
+//     },
+//     credentials:true
+//   }
+app.use(function(req, res, next){
+
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Methods', 'GET', 'PUT', 'POST', 'DELETE');
+  res.header('Access-Control-Allow-Header','Content-Type');
+  next();
+})
 
 global.data = "data";
 global.value = "value";
@@ -30,6 +48,7 @@ global.weather = "clear";
 
 const PORT = process.env.PORT || 8080;
 
+//app.use(cors(corsOptions));
 
   app.listen(PORT, () => {
   
@@ -82,6 +101,7 @@ const PORT = process.env.PORT || 8080;
  
 
 app.get('/cricket', (req, res) => {
+
 
 
    var matches = {} 
