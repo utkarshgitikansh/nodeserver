@@ -16,6 +16,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 
+
+
 var map = new Array();
 var m;
 i = 0;
@@ -45,6 +47,7 @@ global.stats = "new";
 global.playerPID = "x";
 global.playerData = "dhoni";
 global.weather = "clear";
+global.weather_data = {};
 
 const PORT = process.env.PORT || 8080;
 
@@ -492,14 +495,14 @@ app.get('/playerBio', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-   
+  
+  //weather_data = [];
   city = req.query.city;   
- 
+  
+  http.get(`http://api.apixu.com/v1/current.json?key=e8f21b2e09284e35a1b152526191204&q=${city}`, (resu) => {
 
-  http.get(`http://api.apixu.com/v1/current.json?key=e8f21b2e09284e35a1b152526191204&q=${city}`, (res) => {
-
-    const { statusCode } = res;
-    const contentType = res.headers['content-type'];
+    const { statusCode } = resu;
+    const contentType = resu.headers['content-type'];
    
     let error;
     if (statusCode !== 200) {
@@ -512,24 +515,48 @@ app.get('/weather', (req, res) => {
     if (error) {
       console.error(error.message);
   
-      res.resume();
+      resu.resume();
       return;
     }
   
     
     let rawData = '';
-    res.on('data', (chunk) => { rawData += chunk; });
-    res.on('end', () => {
+    resu.on('data', (chunk) => { rawData += chunk; });
+    resu.on('end', () => {
       try {
         const parsedData = JSON.parse(rawData);
         weather = parsedData;
        //console.log(weather)
     
+       //var weather_data = {} 
+      
+       var key1 = 'temperature';
+       //weather_data[key1].pop(); 
+
+       weather_data[key1] = []; 
+                 
+         var data = {
+   
+           full_name: weather.location.name,
+           observation_time: weather.location.localtime,
+           weather: weather.current.condition.text,
+           temp_celsius: weather.current.temp_c,
+           relative_humidity: weather.current.humidity,        
+           wind_string:weather.current.wind_kph,
+           feels_like_celsius:weather.current.feelslike_c,
+           visibility_km:weather.current.vis_km,
+           icon_url:weather.current.condition.icon,
+           precip_today_in:weather.current.precip_in
+         }
+         weather_data[key1].push(data);
+        console.log(weather_data);
+        res.send(weather_data);
+
+
       } catch (e) {
         console.error(e.message);
       }
-  
-  
+      
    
   
     });
@@ -540,30 +567,13 @@ app.get('/weather', (req, res) => {
   
   ////////////////////////
 
-   var weather_data = {} 
-    
-    var key1 = 'temperature';
-
-    weather_data[key1] = []; 
-              
-      var data = {
-
-        full_name: weather.location.name,
-        observation_time: weather.location.localtime,
-        weather: weather.current.condition.text,
-        temp_celsius: weather.current.temp_c,
-        relative_humidity: weather.current.humidity,        
-        wind_string:weather.current.wind_kph,
-        feels_like_celsius:weather.current.feelslike_c,
-        visibility_km:weather.current.vis_km,
-        icon_url:weather.current.condition.icon,
-        precip_today_in:weather.current.precip_in
-      }
-      weather_data[key1].push(data);
-
+   
   ///////////////////////
-
-  res.send(weather_data);
+  //console.log(weather_data);
+  // res.send(weather_data);
+  // res.send(weather_data);
+  //weather_data = null;
+  
 
 }).on('error', (e) => {
 
