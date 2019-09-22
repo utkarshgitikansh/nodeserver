@@ -493,11 +493,10 @@ app.get('/playerBio', (req, res) => {
 
 app.get('/weather', (req, res) => {
    
-  city = req.query.city;
-  state = req.query.state;     
+  city = req.query.city;   
  
 
-  http.get(`http://api.wunderground.com/api/99dfe35fcb7de1ee/conditions/q/${state}/${city}.json`, (res) => {
+  http.get(`http://api.apixu.com/v1/current.json?key=e8f21b2e09284e35a1b152526191204&q=${city}`, (res) => {
 
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
@@ -524,7 +523,7 @@ app.get('/weather', (req, res) => {
       try {
         const parsedData = JSON.parse(rawData);
         weather = parsedData;
-       
+       //console.log(weather)
     
       } catch (e) {
         console.error(e.message);
@@ -549,16 +548,16 @@ app.get('/weather', (req, res) => {
               
       var data = {
 
-        full_name: weather.current_observation.display_location["full"],
-        observation_time: weather.current_observation.observation_time,
-        weather: weather.current_observation.weather,
-        temp_celsius: weather.current_observation.temp_c,
-        relative_humidity: weather.current_observation.relative_humidity,        
-        wind_string:weather.current_observation.wind_string,
-        feels_like_celsius:weather.current_observation.feelslike_c,
-        visibility_km:weather.current_observation.visibility_km,
-        icon_url:weather.current_observation.icon_url,
-        precip_today_in:weather.current_observation.precip_today_in
+        full_name: weather.location.name,
+        observation_time: weather.location.localtime,
+        weather: weather.current.condition.text,
+        temp_celsius: weather.current.temp_c,
+        relative_humidity: weather.current.humidity,        
+        wind_string:weather.current.wind_kph,
+        feels_like_celsius:weather.current.feelslike_c,
+        visibility_km:weather.current.vis_km,
+        icon_url:weather.current.condition.icon,
+        precip_today_in:weather.current.precip_in
       }
       weather_data[key1].push(data);
 
