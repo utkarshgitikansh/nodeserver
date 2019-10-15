@@ -49,7 +49,7 @@ global.playerData = "dhoni";
 global.weather = "clear";
 global.weather_data = {};
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8084;
 
 //app.use(cors(corsOptions));
 
@@ -249,7 +249,7 @@ app.get('/score', (req, res) => {
 })
 
 
-app.get('/playerBio', (req, res) => {
+app.get('/playerBio', (req, res2) => {
 
   name = req.query.name; 
 
@@ -278,15 +278,74 @@ app.get('/playerBio', (req, res) => {
     let rawData = '';
     res.on('data', (chunk) => { rawData += chunk; });
     res.on('end', () => {
-      try {
+      
         const parsedData = JSON.parse(rawData);
         playerPID = parsedData.data[0]["pid"];
+        console.log(playerPID);
+    })
+
+    http.get(`http://cricapi.com/api/playerStats/YQcxw12HpBMe1UaJ6TsKtZTC3Br2?pid=${playerPID}`, (res1) => {
+    
+        
+      console.log(playerPID);
+      const { statusCode } = res1;
+      const contentType = res1.headers['content-type'];
+     
+      let error;
+      if (statusCode !== 200) {
+        error = new Error('Request Failed.\n' +
+                          `Status Code: ${statusCode}`);
+      } else if (!/^application\/json/.test(contentType)) {
+        error = new Error('Invalid content-type.\n' +
+                          `Expected application/json but received ${contentType}`);
+      }
+      if (error) {
+        console.error(error.message);
+    
+        res1.resume();
+        return;
+      }
+    
       
+      let raw1Data = '';
+      res1.on('data', (chunk) => { raw1Data += chunk; });
+      res1.on('end', () => {
+        try {
+          const parsed1Data = JSON.parse(raw1Data);
+           playerData = parsed1Data;
+        res2.send(playerData);
+        console.log(playerData);
+      //////////////////////////////////////
+
+
+   
+      ///////////////////////////////////////
+        } catch (e) {
+          console.error(e.message);
+        }       
+    
+      });
+
+}).on('error', (e) => {
+
+console.error(`Got error: ${e.message}`);
+});
         ///////////////////////////////////
+      }).on('error', (e) => {
+        
+        console.error(`Got error: ${e.message}`);
+      })
+
+    })
+
+    app.get('/playerStat', (req, res) => {
+
+      playerPID = req.query.playerPID; 
 
         http.get(`http://cricapi.com/api/playerStats/YQcxw12HpBMe1UaJ6TsKtZTC3Br2?pid=${playerPID}`, (res1) => {
     
-  
+        
+          console.log(playerPID);
           const { statusCode } = res1;
           const contentType = res1.headers['content-type'];
          
@@ -311,9 +370,9 @@ app.get('/playerBio', (req, res) => {
           res1.on('end', () => {
             try {
               const parsed1Data = JSON.parse(raw1Data);
-              playerData = parsed1Data;
-            
-            ///console.log(playerName);
+               playerData = parsed1Data;
+            res.send(playerData);
+            console.log(playerData);
           //////////////////////////////////////
 
 
@@ -321,28 +380,10 @@ app.get('/playerBio', (req, res) => {
           ///////////////////////////////////////
             } catch (e) {
               console.error(e.message);
-            }
-        
-        
-         
+            }       
         
           });
-        }).on('error', (e) => {
-        
-          console.error(`Got error: ${e.message}`);
-        });
-
-
-
-        //////////////////////////////////
-      } catch (e) {
-        console.error(e.message);
-      }
   
-  
-   
-  
-    });
   }).on('error', (e) => {
   
     console.error(`Got error: ${e.message}`);
@@ -487,10 +528,16 @@ app.get('/playerBio', (req, res) => {
     //record[key2].push(ODI);
     // record[key3].push(Tests);
     // record[key4].push(T20s);
-     res.send(record);
+
+    // setTimeout(()=>{
+
+    //   res.send(record);
+    // },4000)
+     
 ////////////
   // res.send(`PID is `+ playerPID);
   // res.send(playerData);
+  
 
 })
 
@@ -499,7 +546,7 @@ app.get('/weather', (req, res) => {
   //weather_data = [];
   city = req.query.city;   
   
-  http.get(`http://api.apixu.com/v1/current.json?key=e8f21b2e09284e35a1b152526191204&q=${city}`, (resu) => {
+  http.get(`http://api.weatherstack.com/current?access_key=6afa3018a9697b1b2cb2644b10e5479a&query=${city}`, (resu) => {
 
     const { statusCode } = resu;
     const contentType = resu.headers['content-type'];
@@ -526,7 +573,7 @@ app.get('/weather', (req, res) => {
       try {
         const parsedData = JSON.parse(rawData);
         weather = parsedData;
-       //console.log(weather)
+       console.log(weather)
     
        //var weather_data = {} 
       
@@ -539,14 +586,14 @@ app.get('/weather', (req, res) => {
    
            full_name: weather.location.name,
            observation_time: weather.location.localtime,
-           weather: weather.current.condition.text,
-           temp_celsius: weather.current.temp_c,
+           weather: weather.current.weather_descriptions,
+           temp_celsius: weather.current.temperature,
            relative_humidity: weather.current.humidity,        
-           wind_string:weather.current.wind_kph,
-           feels_like_celsius:weather.current.feelslike_c,
-           visibility_km:weather.current.vis_km,
-           icon_url:weather.current.condition.icon,
-           precip_today_in:weather.current.precip_in
+           wind_string:weather.current.wind_speed,
+           feels_like_celsius:weather.current.feelslike,
+           visibility_km:weather.current.visibility,
+           icon_url:weather.current.weather_icons,
+           precip_today_in:weather.current.precip
          }
          weather_data[key1].push(data);
         console.log(weather_data);
