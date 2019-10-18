@@ -6,6 +6,9 @@ var bodyParser = require('body-parser');
 var multer = require('multer'); 
 var querystring = require('querystring'); 
 var upload = multer(); 
+const requ = require("request");
+var cheerio = require("cheerio");
+
 
 
 
@@ -48,8 +51,9 @@ global.playerPID = "x";
 global.playerData = "dhoni";
 global.weather = "clear";
 global.weather_data = {};
+global.city_data = "";
 
-const PORT = process.env.PORT || 8084;
+const PORT = process.env.PORT || 8085;
 
 //app.use(cors(corsOptions));
 
@@ -640,3 +644,66 @@ app.get('/test', (req, res) => {
        console.error(`Got error: ${e.message}`);
      
 })
+
+app.get('/news', (req, res) => {
+  
+
+  requ(
+    `https://inshorts.com/en/read`,
+    (error, response, html) => {
+      if (!error && response.statusCode == 200) {
+        console.log("So far so good ...");
+        ///// Using cheerio to fetch the site details//////
+        const $ = cheerio.load(html);
+
+        var city = {};
+
+        var key1 = "headLines";
+        var key2 = "content";
+        var key3 = "image";
+
+        city[key1] = [];
+        city[key2] = [];
+        city[key3] = [];
+
+        ///// '$' will be used as a reference to getting all website details ///////
+        //console.log($.text());
+        // city_info = $(".clickable")
+        //   .text()
+        //   .replace(/\[.*?\]/g, " ");  headline
+
+        $("[itemprop = 'headline']").each((i, el) => {
+          const headLine = $(el).text().replace(/\[.*?\]/g, " ");;
+         
+
+          city[key1].push(headLine);
+          //notices_url[key2].push(notice_url);
+        });
+
+        $("[itemprop = 'articleBody']").each((i, el) => {
+          const content = $(el).text().replace(/\[.*?\]/g, " ");;
+         
+
+          city[key2].push(content);
+          //notices_url[key2].push(notice_url);
+        });
+
+        //city.push(city_info);
+
+        city_data = city;
+
+        
+        console.log(city_data);
+
+        res.send(city_data);
+      }
+
+      
+    }
+  );
+
+  // console.log(city_value);
+})
+.on("error", e => {
+  console.error(`Got error: ${e.message}`);
+});
