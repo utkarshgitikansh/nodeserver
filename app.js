@@ -677,7 +677,7 @@ app.get('/news', (req, res) => {
          
 
           city[key1].push(headLine);
-          //notices_url[key2].push(notice_url);
+          //notices_url[key2].push(notice_url); //
         });
 
         $("[itemprop = 'articleBody']").each((i, el) => {
@@ -685,6 +685,14 @@ app.get('/news', (req, res) => {
          
 
           city[key2].push(content);
+          //notices_url[key2].push(notice_url);
+        });
+
+        $("[class = 'news-card-image']").each((i, el) => {
+          const content = $(el).attr("style").match(/(https?:\/\/[^ ]*)/);
+         
+          console.log(content);
+          city[key3].push(content);
           //notices_url[key2].push(notice_url);
         });
 
